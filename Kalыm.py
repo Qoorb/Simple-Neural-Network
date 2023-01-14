@@ -9,12 +9,12 @@ class Network():
     def __init__(self, I_DIM, H_DIM, O_DIM):
         self.ValueHN = np.empty(H_DIM, dtype=Neuron)
         self.ValueON = np.empty(O_DIM, dtype=Neuron)
-        self.Weights1 = np.random.random(I_DIM * H_DIM)
-        self.Weights2 = np.random.random(O_DIM * H_DIM)
+        # self.Weights1 = np.random.random(I_DIM * H_DIM)
+        # self.Weights2 = np.random.random(O_DIM * H_DIM)
         
     def FeedForward(self, data):
         for i in range(len(self.ValueHN)):
-            self.ValueHN[i].inWeights(I_DIM) # переделать 
+            self.ValueHN[i].inWeights(I_DIM)
             self.ValueHN[i].Value = self.ValueHN.Activation(data)
         for i in range(len(self.ValueON)):
             self.ValueON[i].inWeights(H_DIM)
@@ -24,15 +24,12 @@ class Network():
     def BackProp(self):
         for i in range(len(self.ValueHN)):
             pass
-        # передать полученное значение и искать ошибку
-        # потом ебануть корректировку весов
 
     def Train(self, data, perfect_data):
         learn_rate = 0.8
         epochs = 100
         
         for epoch in range(epochs):
-            # TODO че нить для данных придумать для своих
             for x, y in zip(data, perfect_data):
                 Out = self.FeedForward(data)
 
