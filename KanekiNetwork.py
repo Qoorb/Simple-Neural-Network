@@ -27,7 +27,7 @@ class neuralNetwork:
         targets = np.array(targets_list, ndmin=2).T
         
         # Вычисление значения нейронов
-        hidden_inputs = np.dot(self.wih, inputs)
+        hidden_inputs = np.dot(np.squeeze(self.wih), np.squeeze(inputs))
         hidden_outputs = self.activation_function(hidden_inputs)
         
         final_inputs = np.dot(self.who, hidden_outputs)
@@ -53,16 +53,16 @@ class neuralNetwork:
         
         return final_outputs
 
-input_nodes = 784
-hidden_nodes = 200
-output_nodes = 10
+input_nodes = 1024
+hidden_nodes = 1024
+output_nodes = 1024
 
 learning_rate = 0.8
 
 n = neuralNetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
 
 # Считывание данных для тренировки
-training_data_file = open("Какие-то данные", 'r')
+training_data_file = open("train_data.csv", 'r')
 training_data_list = training_data_file.readlines()
 training_data_file.close()
 
@@ -81,8 +81,9 @@ for e in range(epochs):
         pass
     pass
 
+
 # Считывание данных для тестов
-test_data_file = open("Какие-то данные", 'r')
+test_data_file = open("test_data.csv", 'r')
 test_data_list = test_data_file.readlines()
 test_data_file.close()
 

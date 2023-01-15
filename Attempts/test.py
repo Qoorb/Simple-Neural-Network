@@ -39,12 +39,11 @@ def createFileList(myDir, format='.jpg'):
               fileList.append(fullName)
   return fileList
 
-myFileList = createFileList('./Samples/GreenROI1/GAL_1')
+myFileList = createFileList('./Samples/train')
 
 for file in myFileList:
     print(file)
     img_file = Image.open(file)
-    img_file.show()
 
     # Параметры исходного изображения
     width, height = img_file.size
@@ -53,12 +52,42 @@ for file in myFileList:
 
     # Если надо будет GrayScale
     img_grey = img_file.convert('L')
+    img_grey = img_grey.resize((32, 32))
+    # img_grey.show()
+    # Конвертируем в формат .csv
+    value = np.asarray(img_grey.getdata(), dtype=int).reshape((img_grey.size[1], img_grey.size[0]))
+    print(value)
+
+    value = value.flatten()
+    print(value)
+    with open("train_data.csv", 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(value)
+
+
+
+myFileList = createFileList('./Samples/test')
+
+for file in myFileList:
+    print(file)
+    img_file = Image.open(file)
+
+    # Параметры исходного изображения
+    width, height = img_file.size
+    format = img_file.format
+    mode = img_file.mode
+
+    # Если надо будет GrayScale
+    img_grey = img_file.convert('L')
+    img_grey = img_grey.resize((32, 32))
+
     # img_grey.show()
 
     # Конвертируем в формат .csv
     value = np.asarray(img_grey.getdata(), dtype=int).reshape((img_grey.size[1], img_grey.size[0]))
+    print(value)
     value = value.flatten()
     print(value)
-    with open("img_pixels.csv", 'a') as f:
+    with open("test_data.csv", 'a') as f:
         writer = csv.writer(f)
         writer.writerow(value)
