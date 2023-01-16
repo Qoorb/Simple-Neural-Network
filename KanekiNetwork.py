@@ -39,7 +39,7 @@ class neuralNetwork:
         
         # Обновление весов
         self.who += self.lr * np.dot((output_errors * final_outputs * (1.0 - final_outputs)), np.transpose(hidden_outputs))
-        self.wih += self.lr * np.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), np.transpose(inputs))
+        self.wih += self.lr * np.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), inputs)
         pass
 
     def query(self, inputs_list):
@@ -63,17 +63,18 @@ n = neuralNetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
 
 # Считывание данных для тренировки
 training_data_file = open("train_data.csv", 'r')
-training_data_list = training_data_file.readlines()
+training_data_list = np.array(training_data_file.readlines())
+print(training_data_list.shape)
 training_data_file.close()
 
 epochs = 5
 
 for e in range(epochs):
     for record in training_data_list:
-        all_values = record.split(',')
-
-        inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
-
+        all_values = list(record.split(',')) #TODO проверка на пустую строчку
+        print(*all_values[:1023])
+        inputs = (np.asfarray(all_values[:]) / 255.0 * 0.99) + 0.01
+        print(inputs.shape)
         targets = np.zeros(output_nodes) + 0.01
         targets[int(all_values[0])] = 0.99
 

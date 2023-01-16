@@ -57,9 +57,9 @@ for file in myFileList:
     # Конвертируем в формат .csv
     value = np.asarray(img_grey.getdata(), dtype=int).reshape((img_grey.size[1], img_grey.size[0]))
     print(value)
-
+    
     value = value.flatten()
-    print(value)
+    print(value.shape)
     with open("train_data.csv", 'a') as f:
         writer = csv.writer(f)
         writer.writerow(value)

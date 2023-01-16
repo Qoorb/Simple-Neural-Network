@@ -66,26 +66,26 @@ class Network(Neuron):
         # self.Output = [Neuron() for _ in range(OUT_NEURON)]
 
     def FeedForward(self, data):
-        # for i in range(len(self.ValueIN)):
-        #     self.ValueIN[i].inWeights(I_DIM)
-        #     self.ValueIN[i].Value = sum([self.ValueIN[i].Activation(data[j]) for j in range(len(data))])
-        # for i in range(len(self.ValueHN)):
-        #     self.ValueHN[i].inWeights(I_DIM)
-        #     self.ValueHN[i].Value = sum([self.ValueHN[i].Activation(self.ValueIN[j].Value) for j in range((np.linalg.matrix_rank(self.ValueIN[i].Value)))])
-        # for i in range(len(self.ValueON)):
-        #     self.ValueON[i].inWeights(H_DIM)
-        #     self.ValueON[i].Value = sum([self.ValueON[i].Activation(self.ValueHN[j].Value) for j in range(np.linalg.matrix_rank(self.ValueHN[i].Value))])
-        # self.Output[0].inWeights(O_DIM)
-        # s = 0
-        # for i in range(len(self.ValueON)):
-        #     s += self.ValueON[i].Value
-        #     self.Output[0].Value = self.Output[0].Activation(s)
-        # return sum(self.Output[0].Value)
-
         for i in range(len(self.ValueIN)):
             self.ValueIN[i].inWeights(I_DIM)
-            self.ValueIN[i].Value = self.ValueIN[i].Activation(data[0])
-        print(self.ValueIN[0].Value)
+            self.ValueIN[i].Value = sum([self.ValueIN[i].Activation(data[j]) for j in range(len(data))])
+        for i in range(len(self.ValueHN)):
+            self.ValueHN[i].inWeights(I_DIM)
+            self.ValueHN[i].Value = sum([self.ValueHN[i].Activation(self.ValueIN[j].Value) for j in range((np.linalg.matrix_rank(self.ValueIN[i].Value)))])
+        for i in range(len(self.ValueON)):
+            self.ValueON[i].inWeights(H_DIM)
+            self.ValueON[i].Value = sum([self.ValueON[i].Activation(self.ValueHN[j].Value) for j in range(np.linalg.matrix_rank(self.ValueHN[i].Value))])
+        self.Output[0].inWeights(O_DIM)
+        s = 0
+        for i in range(len(self.ValueON)):
+            s += self.ValueON[i].Value
+            self.Output[0].Value = self.Output[0].Activation(s)
+        return sum(self.Output[0].Value)
+
+        # for i in range(len(self.ValueIN)):
+        #     self.ValueIN[i].inWeights(I_DIM)
+        #     self.ValueIN[i].Value = self.ValueIN[i].Activation(data[0])
+        # print(self.ValueIN[0].Value)
 
 
     

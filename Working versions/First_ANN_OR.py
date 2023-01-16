@@ -1,29 +1,30 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-(x)))
 
 def mse_loss(y_true, y_pred):
-    return 0.5 * (y_true - y_pred)**2
+    return (y_true - y_pred)
 
 class NeuralNetwork:
     def __init__(self):
-        self.w1 = 0.12
-        self.w2 = 0.35
-        self.w3 = -0.5
-        self.w4 = 0.24
-        self.w5 = -0.33
-        self.w6 = 0.27
-        self.w7 = -0.08
-        self.w8 = 0.79
-        self.w9 = 0.062
-        self.w10 = 0.64
+        self.w1 = np.random.randint(-1, 1)
+        self.w2 = np.random.randint(-1, 1)
+        self.w3 = np.random.randint(-1, 1)
+        self.w4 = np.random.randint(-1, 1)
+        self.w5 = np.random.randint(-1, 1)
+        self.w6 = np.random.randint(-1, 1)
+        self.w7 = np.random.randint(-1, 1)
+        self.w8 = np.random.randint(-1, 1)
+        self.w9 = np.random.randint(-1, 1)
+        self.w10 =np.random.randint(-1, 1)
 
-        self.b1 = 0.02
-        self.b2 = -0.015
-        self.b3 = -0.084
-        self.b4 = 0.037
-        self.b5 = 0.04
+        self.b1 = np.random.randint(-1, 1)
+        self.b2 = np.random.randint(-1, 1)
+        self.b3 = np.random.randint(-1, 1)
+        self.b4 = np.random.randint(-1, 1)
+        self.b5 = np.random.randint(-1, 1)
  
     def feedforward(self, x):
         h1 = sigmoid(self.w1 * x[0] + self.w2 * x[1] + self.b1)
@@ -36,8 +37,8 @@ class NeuralNetwork:
         return o1
  
     def train(self, data, all_y_trues):
-        learn_rate = 0.8
-        epochs = 5000
+        learn_rate = 0.5
+        epochs = 1000
  
         for epoch in range(epochs):
             for x, y_true in zip(data, all_y_trues):
@@ -88,11 +89,10 @@ class NeuralNetwork:
                 self.w1 -= learn_rate * delta_h1 * x[1]
                 self.b1 -= learn_rate * delta_h1
 
-            if epoch % 10 == 0:
-                pass
-                # TODO сделать прогресс-бар
+            if epoch % 1 == 0:
+                grah.append(mse_loss(y_true, o1))
  
-
+grah = []
 data = np.array([[1, 0], [0, 0], [0, 1], [1, 1]])
 
 all_y_trues = np.array([1, 0, 1, 1])
@@ -102,5 +102,13 @@ network.train(data, all_y_trues)
 
 test_1 = np.array([0, 0])  # 0
 test_2 = np.array([1, 1])  # 1
-print("test_1: %.3f" % network.feedforward(test_1))
-print("test_2: %.3f" % network.feedforward(test_2))
+print("test_1: %.3f" % network.feedforward(test_1), f"correct: {0}")
+print("test_2: %.3f" % network.feedforward(test_2), f"correct: {1}")
+
+fig, ax = plt.subplots()
+ax.plot(grah)
+ax.set_title('График функции потерь')
+ax.set_xlabel('Epochs')
+ax.set_ylabel('Error')
+# ax.grid()
+plt.show()
