@@ -98,7 +98,8 @@ for record in test_data_list:
     all_values = record.split(',')
     if len(all_values) == 1:
         continue
-    correct_label = int(all_values[0])
+    correct_label = int(all_values[0]) #TODO выпадает ноль надо что то сделать
+    #TODO переделать тесты
     inputs = (np.asfarray(all_values[:]) / 255.0 * 0.99) + 0.01
 
     outputs = n.query(inputs)
@@ -109,8 +110,7 @@ for record in test_data_list:
         scorecard.append(1)
     else:
         scorecard.append(0)
-        pass
-    pass
+
 
 # Оценка ИНС
 scorecard_array = np.asarray(scorecard)
