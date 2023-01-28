@@ -27,15 +27,15 @@ class neuralNetwork:
         targets = np.array(targets_list, ndmin=2).T
         
         # Вычисление значения нейронов
-        hidden_inputs = np.dot(np.squeeze(self.wih), np.squeeze(inputs))
+        hidden_inputs = np.dot(np.squeeze(self.wih), np.squeeze(inputs)) # float
         hidden_outputs = self.activation_function(hidden_inputs)
         
         final_inputs = np.dot(self.who, hidden_outputs)
         final_outputs = self.activation_function(final_inputs)
         
         # Вычисление ошибки
-        output_errors = targets - final_outputs
-        hidden_errors = np.dot(self.who.T, output_errors) 
+        output_errors = targets - final_outputs # targets: (1024, 1) // final_outputs: (1024,)
+        hidden_errors = np.dot(self.who.T, output_errors) # T лишнее
         
         # Обновление весов
         self.who += self.lr * np.dot((output_errors * final_outputs * (1.0 - final_outputs)), np.transpose(hidden_outputs))
@@ -68,19 +68,23 @@ print(training_data_list.shape)
 training_data_file.close()
 
 epochs = 5
-
+counter = 0
 for e in range(epochs):
     for record in training_data_list:
-        all_values = list(record.split(',')) #TODO проверка на пустую строчку
-        print(*all_values[:1023])
-        inputs = (np.asfarray(all_values[:]) / 255.0 * 0.99) + 0.01
-        print(inputs.shape)
-        targets = np.zeros(output_nodes) + 0.01
+        all_values = list(record.split(',')) # string
+        if len(all_values) == 1:
+            continue
+        # print(*all_values[:1023])
+        inputs = (np.asfarray(all_values[:]) / 255.0 * 0.99) + 0.01 # float
+        # print(inputs.shape)
+        targets = np.zeros(output_nodes) + 0.01 # float
         targets[int(all_values[0])] = 0.99
 
-        n.train(inputs, targets)
-        pass
-    pass
+        n.train(inputs, targets) # (float, float)
+        counter += 1
+        print(counter)
+    counter = 0
+    print(f"Эпоха: {e}")
 
 
 # Считывание данных для тестов
@@ -92,9 +96,10 @@ scorecard = []
 
 for record in test_data_list:
     all_values = record.split(',')
-
+    if len(all_values) == 1:
+        continue
     correct_label = int(all_values[0])
-    inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+    inputs = (np.asfarray(all_values[:]) / 255.0 * 0.99) + 0.01
 
     outputs = n.query(inputs)
     label = np.argmax(outputs)

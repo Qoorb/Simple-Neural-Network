@@ -125,7 +125,7 @@ class Network(Neuron):
             
             
 
-
+#TODO переделать подачу данных
 data = np.array([[1, 0], [0, 0], [0, 1], [1, 1]])  
 
 all_y_trues = np.array([1, 0, 1, 1])
