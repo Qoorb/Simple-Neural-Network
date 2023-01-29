@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.special
-import matplotlib.pyplot
+# import matplotlib.pyplot
 
 class neuralNetwork:
     # Инициализация ИНС
@@ -19,7 +19,6 @@ class neuralNetwork:
         
         # Функция активации - сигмоидная функция из библиотеки scipy
         self.activation_function = lambda x: scipy.special.expit(x)
-        pass
 
     
     def train(self, inputs_list, targets_list):
@@ -35,13 +34,13 @@ class neuralNetwork:
         
         # Вычисление ошибки
         output_errors = targets - final_outputs # targets: (1024, 1) // final_outputs: (1024,)
-        hidden_errors = np.dot(self.who.T, output_errors) # T лишнее
+        hidden_errors = np.dot(self.who.T, output_errors)
         
         # Обновление весов
-        self.who += self.lr * np.dot((output_errors * final_outputs * (1.0 - final_outputs)), np.transpose(hidden_outputs))
-        self.wih += self.lr * np.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), inputs)
-        pass
+        self.who -= self.lr * np.dot((output_errors * final_outputs * (1.0 - final_outputs)), np.transpose(hidden_outputs))
+        self.wih -= self.lr * np.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), inputs)
 
+    #TODO разобраться с query
     def query(self, inputs_list):
         inputs = np.array(inputs_list, ndmin=2).T
         
@@ -71,16 +70,17 @@ epochs = 5
 counter = 0
 for e in range(epochs):
     for record in training_data_list:
-        all_values = list(record.split(',')) # string
+        all_values = list(record.split(','))
+
         if len(all_values) == 1:
             continue
-        # print(*all_values[:1023])
-        inputs = (np.asfarray(all_values[:]) / 255.0 * 0.99) + 0.01 # float
-        # print(inputs.shape)
-        targets = np.zeros(output_nodes) + 0.01 # float
+
+        inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01 
+        targets = np.zeros(output_nodes) + 0.01
+
         targets[int(all_values[0])] = 0.99
 
-        n.train(inputs, targets) # (float, float)
+        n.train(inputs, targets)
         counter += 1
         print(counter)
     counter = 0
@@ -96,21 +96,23 @@ scorecard = []
 
 for record in test_data_list:
     all_values = record.split(',')
+
     if len(all_values) == 1:
         continue
-    correct_label = int(all_values[0]) #TODO выпадает ноль надо что то сделать
-    #TODO переделать тесты
-    inputs = (np.asfarray(all_values[:]) / 255.0 * 0.99) + 0.01
 
+    correct_label = int(all_values[0])
+    inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+ 
     outputs = n.query(inputs)
-    label = np.argmax(outputs)
+    label = np.argmax(outputs) 
 
-    # Добавление в список правильных и неправильных ответов
     if (label == correct_label):
-        scorecard.append(1)
+        scorecard.append(1) # проверка на цвет label = 0 (print('red')) else label = 1 (print('green'))
     else:
         scorecard.append(0)
-
+# 0 = "red"
+# 1 = "green"
+# 2 = "Nothing"
 
 # Оценка ИНС
 scorecard_array = np.asarray(scorecard)
