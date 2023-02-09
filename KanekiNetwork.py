@@ -26,19 +26,19 @@ class neuralNetwork:
         targets = np.array(targets_list, ndmin=2).T
         
         # Вычисление значения нейронов
-        hidden_inputs = np.dot(np.squeeze(self.wih), np.squeeze(inputs)) # float
+        hidden_inputs = np.dot(self.wih, inputs) # float
         hidden_outputs = self.activation_function(hidden_inputs)
         
         final_inputs = np.dot(self.who, hidden_outputs)
         final_outputs = self.activation_function(final_inputs)
         
         # Вычисление ошибки
-        output_errors = targets - final_outputs # targets: (1024, 1) // final_outputs: (1024,)
+        output_errors = targets - final_outputs # -(targets - final_outputs)
         hidden_errors = np.dot(self.who.T, output_errors)
         
         # Обновление весов
         self.who -= self.lr * np.dot((output_errors * final_outputs * (1.0 - final_outputs)), np.transpose(hidden_outputs))
-        self.wih -= self.lr * np.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), inputs)
+        self.wih -= self.lr * np.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), np.transpose(inputs))
 
     #TODO разобраться с query
     def query(self, inputs_list):
@@ -53,20 +53,20 @@ class neuralNetwork:
         return final_outputs
 
 input_nodes = 1024
-hidden_nodes = 1024
-output_nodes = 1024
+hidden_nodes = 824
+output_nodes = 3
 
-learning_rate = 0.8
+learning_rate = 0.1
 
 n = neuralNetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
 
 # Считывание данных для тренировки
-training_data_file = open("train_data.csv", 'r')
+training_data_file = open("./train_data.csv", 'r')
 training_data_list = np.array(training_data_file.readlines())
-print(training_data_list.shape)
+# print(training_data_list.shape)
 training_data_file.close()
 
-epochs = 5
+epochs = 3
 counter = 0
 for e in range(epochs):
     for record in training_data_list:
@@ -75,7 +75,7 @@ for e in range(epochs):
         if len(all_values) == 1:
             continue
 
-        inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01 
+        inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
         targets = np.zeros(output_nodes) + 0.01
 
         targets[int(all_values[0])] = 0.99
@@ -87,8 +87,9 @@ for e in range(epochs):
     print(f"Эпоха: {e}")
 
 
+
 # Считывание данных для тестов
-test_data_file = open("test_data.csv", 'r')
+test_data_file = open("./test_data.csv", 'r') # test_data.csv
 test_data_list = test_data_file.readlines()
 test_data_file.close()
 
@@ -101,10 +102,13 @@ for record in test_data_list:
         continue
 
     correct_label = int(all_values[0])
+    # print(correct_label) # 1
     inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
+    # print(inputs) # [np.float64]
  
     outputs = n.query(inputs)
     label = np.argmax(outputs) 
+    print(label, correct_label, sep="=")
 
     if (label == correct_label):
         scorecard.append(1) # проверка на цвет label = 0 (print('red')) else label = 1 (print('green'))
