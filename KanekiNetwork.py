@@ -1,6 +1,9 @@
 import numpy as np
 import scipy.special
-# import matplotlib.pyplot
+import matplotlib.pyplot as plt
+
+def mse_loss(true, pred):
+    return (true - pred)
 
 class neuralNetwork:
     # Инициализация ИНС
@@ -20,7 +23,6 @@ class neuralNetwork:
         # Функция активации - сигмоидная функция из библиотеки scipy
         self.activation_function = lambda x: scipy.special.expit(x)
 
-    
     def train(self, inputs_list, targets_list):
         inputs = np.array(inputs_list, ndmin=2).T
         targets = np.array(targets_list, ndmin=2).T
@@ -37,10 +39,9 @@ class neuralNetwork:
         hidden_errors = np.dot(self.who.T, output_errors)
         
         # Обновление весов
-        self.who -= self.lr * np.dot((output_errors * final_outputs * (1.0 - final_outputs)), np.transpose(hidden_outputs))
-        self.wih -= self.lr * np.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), np.transpose(inputs))
+        self.who += self.lr * np.dot((output_errors * final_outputs * (1.0 - final_outputs)), np.transpose(hidden_outputs))
+        self.wih += self.lr * np.dot((hidden_errors * hidden_outputs * (1.0 - hidden_outputs)), np.transpose(inputs))
 
-    #TODO разобраться с query
     def query(self, inputs_list):
         inputs = np.array(inputs_list, ndmin=2).T
         
@@ -53,21 +54,20 @@ class neuralNetwork:
         return final_outputs
 
 input_nodes = 1024
-hidden_nodes = 824
-output_nodes = 3
+hidden_nodes = 512
+output_nodes = 2
+grah = []
 
-learning_rate = 0.1
+learning_rate = 0.8
 
 n = neuralNetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
 
 # Считывание данных для тренировки
-training_data_file = open("./train_data.csv", 'r')
+training_data_file = open("./Data/tututrain.csv", 'r')
 training_data_list = np.array(training_data_file.readlines())
-# print(training_data_list.shape)
 training_data_file.close()
 
 epochs = 3
-counter = 0
 for e in range(epochs):
     for record in training_data_list:
         all_values = list(record.split(','))
@@ -81,15 +81,20 @@ for e in range(epochs):
         targets[int(all_values[0])] = 0.99
 
         n.train(inputs, targets)
-        counter += 1
-        print(counter)
-    counter = 0
+    # grah.append((int(all_values[0]) - np.argmax(n.query(inputs))))
     print(f"Эпоха: {e}")
+
+# fig, ax = plt.subplots()
+# ax.plot(grah)
+# ax.set_title('График функции потерь')
+# ax.set_xlabel('Epochs')
+# ax.set_ylabel('Error')
+# plt.show()
 
 
 
 # Считывание данных для тестов
-test_data_file = open("./test_data.csv", 'r') # test_data.csv
+test_data_file = open("./Data/tutu.csv", 'r')
 test_data_list = test_data_file.readlines()
 test_data_file.close()
 
@@ -102,9 +107,7 @@ for record in test_data_list:
         continue
 
     correct_label = int(all_values[0])
-    # print(correct_label) # 1
     inputs = (np.asfarray(all_values[1:]) / 255.0 * 0.99) + 0.01
-    # print(inputs) # [np.float64]
  
     outputs = n.query(inputs)
     label = np.argmax(outputs) 
@@ -114,10 +117,11 @@ for record in test_data_list:
         scorecard.append(1) # проверка на цвет label = 0 (print('red')) else label = 1 (print('green'))
     else:
         scorecard.append(0)
+
 # 0 = "red"
 # 1 = "green"
 # 2 = "Nothing"
 
 # Оценка ИНС
 scorecard_array = np.asarray(scorecard)
-print ("performance = ", scorecard_array.sum() / scorecard_array.size)
+print (f"performance = {(scorecard_array.sum() / scorecard_array.size)*100} %")
