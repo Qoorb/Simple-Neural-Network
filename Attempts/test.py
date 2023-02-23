@@ -3,7 +3,6 @@ import numpy as np
 import sys
 import os
 import csv
-import cv2
 
 def createFileList(myDir, format='.jpg'):
   fileList = []
@@ -40,10 +39,9 @@ def createFileList(myDir, format='.jpg'):
 
 
 
-myFileList = createFileList('./Samples/RC_1')
+myFileList = createFileList('./Samples/test (red)')
 
-data = []
-c = 1
+# data = []
 for file in myFileList:
     img_file = Image.open(file)
 
@@ -52,19 +50,19 @@ for file in myFileList:
 
     # print(img_hsv)
     # Конвертируем в формат .csv
-    data.append(0)
+    # data.append(0)
+    # value = np.asarray((np.array([0]) + np.array(img_hsv.getdata(), dtype=int))) # 2-D array
     value = np.asarray(img_hsv.getdata(), dtype=int)
-    for i in range(img_hsv.size[0] * img_hsv.size[1]):
-      data.append(value[i][0])
-
-    
-    # value = value.flatten()
+    # print(value)
+    # value = np.asarray(img_hsv.getdata(), dtype=int)
+    # for i in range(img_hsv.size[0] * img_hsv.size[1]):
+    #   data.append([value[i][0], value[i][1], value[i][2]])
+    value = np.insert(value, 0, 0)
+    value = value.flatten()
     # data = np.insert(data, 0, 1)
     # 0 = Red
     # 1 = Green
 
-    with open("tututrain.csv", 'a') as f:
+    with open("TEST_DATA_Q.csv", 'a') as f:
         writer = csv.writer(f)
-        writer.writerow(data)
-    
-    data = []
+        writer.writerow(value)
