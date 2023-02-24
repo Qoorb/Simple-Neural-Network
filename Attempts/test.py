@@ -40,10 +40,9 @@ def createFileList(myDir, format='.jpg'):
 
 
 
-myFileList = createFileList('./Samples/RC_1')
+myFileList = createFileList('./Samples/GC_1')
 
 data = []
-c = 1
 for file in myFileList:
     img_file = Image.open(file)
 
@@ -52,7 +51,7 @@ for file in myFileList:
 
     # print(img_hsv)
     # Конвертируем в формат .csv
-    data.append(0)
+    data.append(1)
     value = np.asarray(img_hsv.getdata(), dtype=int)
     for i in range(img_hsv.size[0] * img_hsv.size[1]):
       data.append(value[i][0])
@@ -63,7 +62,7 @@ for file in myFileList:
     # 0 = Red
     # 1 = Green
 
-    with open("tututrain.csv", 'a') as f:
+    with open("new_train_data.csv", 'a') as f:
         writer = csv.writer(f)
         writer.writerow(data)
     
