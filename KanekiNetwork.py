@@ -53,17 +53,17 @@ class neuralNetwork:
         
         return final_outputs
 
-input_nodes = 1024
-hidden_nodes = 512
+input_nodes = 3072
+hidden_nodes = 1500
 output_nodes = 2
 grah = []
 
-learning_rate = 0.8
+learning_rate = 0.15
 
 n = neuralNetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
 
 # Считывание данных для тренировки
-training_data_file = open("./Data/tututrain.csv", 'r')
+training_data_file = open("./Data/TRAIN_DATA_Q.csv", 'r')
 training_data_list = np.array(training_data_file.readlines())
 training_data_file.close()
 
@@ -82,7 +82,7 @@ for e in range(epochs):
 
         n.train(inputs, targets)
     # grah.append((int(all_values[0]) - np.argmax(n.query(inputs))))
-    print(f"Эпоха: {e}")
+    print(f"Эпоха: {e + 1}")
 
 # fig, ax = plt.subplots()
 # ax.plot(grah)
@@ -94,7 +94,7 @@ for e in range(epochs):
 
 
 # Считывание данных для тестов
-test_data_file = open("./Data/tutu.csv", 'r')
+test_data_file = open("./Data/TEST_DATA_Q.csv", 'r')
 test_data_list = test_data_file.readlines()
 test_data_file.close()
 
@@ -125,3 +125,18 @@ for record in test_data_list:
 # Оценка ИНС
 scorecard_array = np.asarray(scorecard)
 print (f"performance = {(scorecard_array.sum() / scorecard_array.size)*100} %")
+
+
+w1_mat = np.matrix(n.wih)
+# with open('weights/fst_w.txt','wb') as f:
+#     for line in w1_mat:
+#         np.savetxt(f, line, fmt='%.8f')
+np.savetxt("weights/fst_w.csv", w1_mat, delimiter=",")
+print("Успешно сохранены веса из первого слоя.")
+
+w2_mat = np.matrix(n.who)
+# with open('weights/snd_w.txt','wb') as f:
+#     for line in w2_mat:
+#         np.savetxt(f, line, fmt='%.8f')
+np.savetxt("weights/snd_w.csv", w2_mat, delimiter=",")
+print("Успешно сохранены веса из второго слоя.")
