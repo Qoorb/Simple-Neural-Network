@@ -1,5 +1,7 @@
 from PIL import Image
 import numpy as np
+import pandas as pd
+from sklearn.utils import shuffle
 import sys
 import os
 import csv
@@ -13,7 +15,6 @@ def createFileList(myDir, format='.jpg'):
               fileList.append(fullName)
   return fileList
 
-# myFileList = createFileList('./Samples/train (only green)')
 
 # for file in myFileList:
 #     print(file)
@@ -39,15 +40,9 @@ def createFileList(myDir, format='.jpg'):
 
 
 
-<<<<<<< HEAD
-myFileList = createFileList('./Samples/GC_1')
-
-data = []
-=======
 myFileList = createFileList('./Samples/test (red)')
 
 # data = []
->>>>>>> 093f8e6b8e32fa55868c1353fa45e32d868e0d1e
 for file in myFileList:
     img_file = Image.open(file)
 
@@ -56,12 +51,8 @@ for file in myFileList:
 
     # print(img_hsv)
     # Конвертируем в формат .csv
-<<<<<<< HEAD
-    data.append(1)
-=======
     # data.append(0)
     # value = np.asarray((np.array([0]) + np.array(img_hsv.getdata(), dtype=int))) # 2-D array
->>>>>>> 093f8e6b8e32fa55868c1353fa45e32d868e0d1e
     value = np.asarray(img_hsv.getdata(), dtype=int)
     # print(value)
     # value = np.asarray(img_hsv.getdata(), dtype=int)
@@ -73,10 +64,37 @@ for file in myFileList:
     # 0 = Red
     # 1 = Green
 
-<<<<<<< HEAD
-    with open("new_train_data.csv", 'a') as f:
-=======
     with open("TEST_DATA_Q.csv", 'a') as f:
->>>>>>> 093f8e6b8e32fa55868c1353fa45e32d868e0d1e
+        writer = csv.writer(f)
+        writer.writerow(value)
+
+
+
+
+myFileList = createFileList('./Samples/test (green)')
+
+# data = []
+for file in myFileList:
+    img_file = Image.open(file)
+
+    img_hsv = img_file.convert('HSV')
+    img_hsv = img_hsv.resize((32, 32))
+
+    # print(img_hsv)
+    # Конвертируем в формат .csv
+    # data.append(0)
+    # value = np.asarray((np.array([0]) + np.array(img_hsv.getdata(), dtype=int))) # 2-D array
+    value = np.asarray(img_hsv.getdata(), dtype=int)
+    # print(value)
+    # value = np.asarray(img_hsv.getdata(), dtype=int)
+    # for i in range(img_hsv.size[0] * img_hsv.size[1]):
+    #   data.append([value[i][0], value[i][1], value[i][2]])
+    value = np.insert(value, 0, 1)
+    value = value.flatten()
+    # data = np.insert(data, 0, 1)
+    # 0 = Red
+    # 1 = Green
+
+    with open("TEST_DATA_Q.csv", 'a') as f:
         writer = csv.writer(f)
         writer.writerow(value)

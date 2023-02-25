@@ -35,7 +35,7 @@ class neuralNetwork:
         final_outputs = self.activation_function(final_inputs)
         
         # Вычисление ошибки
-        output_errors = targets - final_outputs # -(targets - final_outputs)
+        output_errors = targets - final_outputs
         hidden_errors = np.dot(self.who.T, output_errors)
         
         # Обновление весов
@@ -128,15 +128,9 @@ print (f"performance = {(scorecard_array.sum() / scorecard_array.size)*100} %")
 
 
 w1_mat = np.matrix(n.wih)
-# with open('weights/fst_w.txt','wb') as f:
-#     for line in w1_mat:
-#         np.savetxt(f, line, fmt='%.8f')
 np.savetxt("weights/fst_w.csv", w1_mat, delimiter=",")
 print("Успешно сохранены веса из первого слоя.")
 
 w2_mat = np.matrix(n.who)
-# with open('weights/snd_w.txt','wb') as f:
-#     for line in w2_mat:
-#         np.savetxt(f, line, fmt='%.8f')
 np.savetxt("weights/snd_w.csv", w2_mat, delimiter=",")
 print("Успешно сохранены веса из второго слоя.")
