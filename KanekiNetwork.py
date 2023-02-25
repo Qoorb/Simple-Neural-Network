@@ -28,7 +28,7 @@ class neuralNetwork:
         targets = np.array(targets_list, ndmin=2).T
         
         # Вычисление значения нейронов
-        hidden_inputs = np.dot(self.wih, inputs) # float
+        hidden_inputs = np.dot(self.wih, inputs)
         hidden_outputs = self.activation_function(hidden_inputs)
         
         final_inputs = np.dot(self.who, hidden_outputs)
