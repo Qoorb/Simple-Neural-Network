@@ -70,3 +70,36 @@ import numpy as np
 
 
 
+# class MyClass():
+    
+#     TOTAL_OBJECTS=0
+    
+#     def __init__(self):
+#         MyClass.TOTAL_OBJECTS = MyClass.TOTAL_OBJECTS+1
+#     def A(self, a, b):
+#         MyClass.TOTAL_OBJECTS = MyClass.TOTAL_OBJECTS+1
+#         return a + b
+    
+#     @classmethod
+#     def total_objects(cls):
+#         print("Total objects: ",cls.TOTAL_OBJECTS)
+# # Создаем объекты        
+# my_obj1 = MyClass()
+# my_obj1.A(1, 2)
+# # Вызываем classmethod 
+# MyClass.total_objects()
+
+# weights = []
+
+# wih = np.random.normal(0.0, pow(2, -0.5), (2, 10))
+# who = np.random.normal(0.0, pow(5, -0.5), (10, 10))
+
+# # print(wih, who, sep='\n\n')
+
+# weights.append(wih)
+# # weights.append(who)
+
+# print(weights)
+
+for i in range(10, 0, -1):
+    print(i, sep='; ')

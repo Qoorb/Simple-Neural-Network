@@ -53,9 +53,9 @@ class neuralNetwork:
         
         return final_outputs
 
-input_nodes = 3072
-hidden_nodes = 1500
-output_nodes = 2
+input_nodes = 784
+hidden_nodes = 300
+output_nodes = 10
 grah = []
 
 learning_rate = 0.15
@@ -63,11 +63,11 @@ learning_rate = 0.15
 n = neuralNetwork(input_nodes,hidden_nodes,output_nodes, learning_rate)
 
 # Считывание данных для тренировки
-training_data_file = open("./Data/TRAIN_DATA_Q.csv", 'r')
+training_data_file = open("./Data/train_dataset (MNIST).csv", 'r')
 training_data_list = np.array(training_data_file.readlines())
 training_data_file.close()
 
-epochs = 3
+epochs = 1 # 3
 for e in range(epochs):
     for record in training_data_list:
         all_values = list(record.split(','))
@@ -94,7 +94,7 @@ for e in range(epochs):
 
 
 # Считывание данных для тестов
-test_data_file = open("./Data/TEST_DATA_Q.csv", 'r')
+test_data_file = open("./Data/test_dataset (MNIST).csv", 'r')
 test_data_list = test_data_file.readlines()
 test_data_file.close()
 
