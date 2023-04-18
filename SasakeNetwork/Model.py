@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.special
 import Layer
 
 class FeedForwardNeuralNetwork:
@@ -20,9 +19,6 @@ class FeedForwardNeuralNetwork:
 
         # скорость обучения
         self.lr = learningrate
-        
-        # Функция активации - сигмоидная функция из библиотеки scipy
-        self.activation_function = lambda x: scipy.special.expit(x)
 
 
     def AddHiddenLayer(self, functionActivation, countNeurons):
@@ -45,13 +41,14 @@ class FeedForwardNeuralNetwork:
         
         # Вычисление значения нейронов
         inputValue = np.dot(FeedForwardNeuralNetwork.weights[0], inputs)
-        outputValue = self.activation_function(inputValue)
+        outputValue = Layer.Layer.activation(self.hnodes[0], inputValue)
+
         FeedForwardNeuralNetwork.valueLayers.append(outputValue)
 
         if len(FeedForwardNeuralNetwork.weights) > 1:
             for i in range(1, len(self.hnodes) + 1):
                 inputValue = np.dot(FeedForwardNeuralNetwork.weights[i], outputValue)
-                outputValue = self.activation_function(inputValue)
+                outputValue = Layer.Layer.activation(self.hnodes[i - 1], inputValue)
                 FeedForwardNeuralNetwork.valueLayers.append(outputValue)
         
         # Вычисление ошибки
@@ -76,13 +73,13 @@ class FeedForwardNeuralNetwork:
         inputs = np.array(inputs_list, ndmin=2).T
 
         inputValue = np.dot(FeedForwardNeuralNetwork.weights[0], inputs)
-        outputValue = self.activation_function(inputValue)
+        outputValue = Layer.Layer.activation(self.hnodes[0], inputValue)
         FeedForwardNeuralNetwork.valueLayers.append(outputValue)
 
         if len(FeedForwardNeuralNetwork.weights) > 1:
             for i in range(1, len(self.hnodes) + 1):
                 inputValue = np.dot(FeedForwardNeuralNetwork.weights[i], outputValue)
-                outputValue = self.activation_function(inputValue)
+                outputValue = Layer.Layer.activation(self.hnodes[i - 1], inputValue)
                 FeedForwardNeuralNetwork.valueLayers.append(outputValue)
         finalOutput = FeedForwardNeuralNetwork.valueLayers[-1]
         FeedForwardNeuralNetwork.valueLayers.clear()

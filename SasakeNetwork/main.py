@@ -8,8 +8,8 @@ output_nodes = 10
 learning_rate = 0.15
 
 n = Model.FeedForwardNeuralNetwork(input_nodes, output_nodes, learning_rate)
-n.AddHiddenLayer(lambda x: scipy.special.expit(x), 500)
-n.AddHiddenLayer(lambda x: scipy.special.expit(x), 400)
+n.AddHiddenLayer(functionActivation='sigmoid', countNeurons=500)
+n.AddHiddenLayer(functionActivation='sigmoid', countNeurons=500)
 
 # Считывание данных для тренировки
 training_data_file = open("./Data/train_dataset (MNIST).csv", 'r')
