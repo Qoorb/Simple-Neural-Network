@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.special
 import Model
 
 input_nodes = 784
@@ -7,7 +6,7 @@ output_nodes = 10
 
 learning_rate = 0.15
 
-n = Model.FeedForwardNeuralNetwork(input_nodes, output_nodes, learning_rate)
+n = Model.FeedForwardNeuralNetwork(input_nodes, output_nodes, learning_rate, optimizer='SGD')
 n.AddHiddenLayer(functionActivation='sigmoid', countNeurons=500)
 n.AddHiddenLayer(functionActivation='sigmoid', countNeurons=500)
 

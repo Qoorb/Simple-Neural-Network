@@ -101,5 +101,11 @@ import numpy as np
 
 # print(weights)
 
-for i in range(10, 0, -1):
-    print(i, sep='; ')
+# for i in range(10, 0, -1):
+#     print(i, sep='; ')
+
+a = [1, 2, 3, 4, 5]
+b = [0, 0, 0, 0, 0]
+print(b)
+b = a
+print(b)
