@@ -21,6 +21,10 @@ class FeedForwardNeuralNetwork:
         self.hnodes = []
         self.onodes = outputnodes
         self.optFunc = optimizer
+        if self.optFunc == 'Momentum':
+            self.v = Optimizers.initilization_momentum(FeedForwardNeuralNetwork.weights)
+        elif self.optFunc == 'RMSprop':
+            self.s = Optimizers.initilization_RMS(FeedForwardNeuralNetwork.weights)
 
         # Матрицы весов
         FeedForwardNeuralNetwork.weights.append(np.random.normal(0.0, pow(self.inodes, -0.5), (self.inodes, self.onodes)))
@@ -32,6 +36,10 @@ class FeedForwardNeuralNetwork:
     def AddHiddenLayer(self, functionActivation, countNeurons):
         self.hnodes.append(Layer.Layer(functionActivation, countNeurons))
         self.weights.clear()
+        if self.optFunc == 'Momentum':
+            self.v.clear()
+        elif self.optFunc == 'RMSprop':
+            self.s.clear()    
         
         # Update quantity weights
         FeedForwardNeuralNetwork.weights.append(np.random.normal(0.0, pow(self.inodes, -0.5), (self.hnodes[0].neurons, self.inodes)))
@@ -41,6 +49,10 @@ class FeedForwardNeuralNetwork:
                 FeedForwardNeuralNetwork.weights.append(np.random.normal(0.0, pow(self.hnodes[i].neurons, -0.5), (self.hnodes[i + 1].neurons, self.hnodes[i].neurons)))
         
         FeedForwardNeuralNetwork.weights.append(np.random.normal(0.0, pow(self.hnodes[-1].neurons, -0.5), (self.onodes, self.hnodes[-1].neurons)))
+        if self.optFunc == 'Momentum':
+            self.v = Optimizers.initilization_momentum(FeedForwardNeuralNetwork.weights)
+        elif self.optFunc == 'RMSprop':
+            self.s = Optimizers.initilization_RMS(FeedForwardNeuralNetwork.weights)
         
 
     def train(self, inputs_list, targets_list):
@@ -79,6 +91,10 @@ class FeedForwardNeuralNetwork:
         # 3. TODO подумать стоить ли как нибудь рассчитать градиент, мб как то можно меньше аргументов передевать 
         if self.optFunc == 'SGD':
             FeedForwardNeuralNetwork.weights = Optimizers.SGD(self.lr, FeedForwardNeuralNetwork.weights, FeedForwardNeuralNetwork.valueErrors, FeedForwardNeuralNetwork.valueLayers, len(self.hnodes), inputs)
+        elif self.optFunc == 'Momentum':   
+            FeedForwardNeuralNetwork.weights = Optimizers.Momentum(self.lr, FeedForwardNeuralNetwork.weights, FeedForwardNeuralNetwork.valueErrors, FeedForwardNeuralNetwork.valueLayers, len(self.hnodes), inputs, self.v)
+        elif self.optFunc == 'RMSprop':
+            FeedForwardNeuralNetwork.weights = Optimizers.RMSprop(self.lr, FeedForwardNeuralNetwork.weights, FeedForwardNeuralNetwork.valueErrors, FeedForwardNeuralNetwork.valueLayers, len(self.hnodes), inputs, self.s)
 
         FeedForwardNeuralNetwork.valueLayers.clear()
         FeedForwardNeuralNetwork.valueErrors.clear()

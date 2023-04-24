@@ -6,7 +6,7 @@ output_nodes = 10
 
 learning_rate = 0.15
 
-n = Model.FeedForwardNeuralNetwork(input_nodes, output_nodes, learning_rate, optimizer='SGD')
+n = Model.FeedForwardNeuralNetwork(input_nodes, output_nodes, learning_rate, optimizer='RMSprop')
 n.AddHiddenLayer(functionActivation='sigmoid', countNeurons=500)
 n.AddHiddenLayer(functionActivation='sigmoid', countNeurons=500)
 
