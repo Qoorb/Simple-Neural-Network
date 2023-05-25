@@ -20,6 +20,8 @@ def SGD(learning_rate, weights, valueErrors, valueLayers, iterations, inputs):
     weights[0] -= learning_rate * np.dot((valueErrors[-1] * valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs))
 
     return weights
+# Results: 93,39% 
+
 
 #SGD with Momentum
 def Momentum(learning_rate, weights, valueErrors, valueLayers, iterations, inputs, v):
@@ -37,14 +39,20 @@ def Momentum(learning_rate, weights, valueErrors, valueLayers, iterations, input
 # не работает // ???
 def RMSprop(learning_rate, weights, valueErrors, valueLayers, iterations, inputs, s):
     beta = 0.9
-    eps = pow(10, -4)   
+    eps = pow(10, -4)
 
     if len(weights) > 1:
         for i in range(iterations, 0, -1):
-            s[i] = (beta * s[i]) + ((1 - beta) * np.square(np.dot((valueErrors[-(i+1)] *  valueLayers[i] * (1.0 - valueLayers[i])), np.transpose(valueLayers[i - 1]))))
+            s[i] = (beta * s[i]) + ((1 - beta) * np.square(np.dot((valueErrors[-(i+1)] * valueLayers[i] * (1.0 - valueLayers[i])), np.transpose(valueLayers[i - 1]))))
             weights[i] -= learning_rate * (np.dot((valueErrors[-(i+1)] *  valueLayers[i] * (1.0 - valueLayers[i])), np.transpose(valueLayers[i - 1])) / (np.sqrt(s[i] + eps)))
     s[0] = (beta * s[0]) + ((1 - beta) * np.square(np.dot((valueErrors[-1] * valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs))))
     weights[0] -= learning_rate * (np.dot((valueErrors[-1] *  valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs)) / (np.sqrt(s[0] + eps)))
 
     return weights
 
+# TODO 
+# Тайминги: около 10 минут
+# Оценка: ~10%
+
+
+    

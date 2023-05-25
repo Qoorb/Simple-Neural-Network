@@ -75,6 +75,8 @@ class FeedForwardNeuralNetwork:
         
         # Вычисление ошибки
         FeedForwardNeuralNetwork.valueErrors.append(FeedForwardNeuralNetwork.valueLayers[-1] - targets)
+        
+        # print(np.sum(np.square(FeedForwardNeuralNetwork.valueErrors[-1])))
 
         if len(self.hnodes) > 0:
             for i in range(len(self.hnodes), 0, -1):
