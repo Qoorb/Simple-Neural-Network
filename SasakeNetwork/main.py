@@ -1,10 +1,12 @@
 import numpy as np
 import Model
+import matplotlib.pyplot as plt
 
 input_nodes = 784
 output_nodes = 10
-
-learning_rate = 0.15
+costs = []
+itr = []
+learning_rate = 0.001
 
 n = Model.FeedForwardNeuralNetwork(input_nodes, output_nodes, learning_rate, optimizer='RMSprop')
 n.AddHiddenLayer(functionActivation='sigmoid', countNeurons=500)
@@ -15,10 +17,10 @@ training_data_file = open("./Data/train_dataset (MNIST).csv", 'r')
 training_data_list = np.array(training_data_file.readlines())
 training_data_file.close()
 
-epochs = 3
+epochs = 1
 for e in range(epochs):
-    for record in training_data_list:
-        all_values = list(record.split(','))
+    for i in range(len(training_data_list)):
+        all_values = list(training_data_list[i].split(','))
 
         if len(all_values) == 1:
             continue
@@ -28,8 +30,15 @@ for e in range(epochs):
 
         targets[int(all_values[0])] = 0.99
 
-        n.train(inputs, targets)
+        cost = n.train(inputs, targets)
+        if i % 5 == 0:
+            costs.append(cost)
+            itr.append(i)
+            if i % 100 == 0 :
+                print('cost of iteration______{}______{}'.format(i, cost))
+
     print(f"Эпоха: {e + 1}")
+
 
 
 # Считывание данных для тестов
@@ -62,3 +71,11 @@ for record in test_data_list:
 
 scorecard_array = np.asarray(scorecard)
 print (f"performance = {(scorecard_array.sum() / scorecard_array.size)*100} %")
+
+
+plt.plot(itr, costs,color="black",label="rmsprop")
+plt.xlabel('num_iter')
+plt.ylabel('cost')
+plt.legend()
+plt.title('visualization of different optimizers')
+plt.show()

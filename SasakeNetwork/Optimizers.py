@@ -34,7 +34,7 @@ def Momentum(learning_rate, weights, valueErrors, valueLayers, iterations, input
     v[0] = (beta * v[0]) + ((1 - beta) * np.dot((valueErrors[-1] * valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs)))
     weights[0] -= learning_rate * v[0]
 
-    return weights
+    return weights, v
 
 # не работает // ???
 def RMSprop(learning_rate, weights, valueErrors, valueLayers, iterations, inputs, s):
@@ -48,7 +48,7 @@ def RMSprop(learning_rate, weights, valueErrors, valueLayers, iterations, inputs
     s[0] = (beta * s[0]) + ((1 - beta) * np.square(np.dot((valueErrors[-1] * valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs))))
     weights[0] -= learning_rate * (np.dot((valueErrors[-1] *  valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs)) / (np.sqrt(s[0] + eps)))
 
-    return weights
+    return weights, s
 
 # TODO 
 # Тайминги: около 10 минут

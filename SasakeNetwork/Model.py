@@ -1,6 +1,8 @@
 import numpy as np
 import Optimizers
 import Layer
+import matplotlib.pyplot as plt
+
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-(x)))
@@ -10,9 +12,11 @@ def derivative_sigmoid(x):
 
 class FeedForwardNeuralNetwork:
     
+    igrek = []
     weights = []
     valueLayers = []
     valueErrors = []
+
 
     # Инициализация ИНС
     def __init__(self, inputnodes, outputnodes, learningrate, optimizer):
@@ -32,6 +36,15 @@ class FeedForwardNeuralNetwork:
         # скорость обучения
         self.lr = learningrate
 
+    def compute_cost(self, predict, true):
+            size = true.shape[0]
+            cost = -(1 / size) * np.sum(true * np.log(predict) + (1 - true) * np.log(1 - predict))
+            return cost
+    
+    # high learning rate leads to issues 
+
+    
+
 
     def AddHiddenLayer(self, functionActivation, countNeurons):
         self.hnodes.append(Layer.Layer(functionActivation, countNeurons))
@@ -40,7 +53,7 @@ class FeedForwardNeuralNetwork:
             self.v.clear()
         elif self.optFunc == 'RMSprop':
             self.s.clear()    
-        
+    
         # Update quantity weights
         FeedForwardNeuralNetwork.weights.append(np.random.normal(0.0, pow(self.inodes, -0.5), (self.hnodes[0].neurons, self.inodes)))
         
@@ -53,7 +66,6 @@ class FeedForwardNeuralNetwork:
             self.v = Optimizers.initilization_momentum(FeedForwardNeuralNetwork.weights)
         elif self.optFunc == 'RMSprop':
             self.s = Optimizers.initilization_RMS(FeedForwardNeuralNetwork.weights)
-        
 
     def train(self, inputs_list, targets_list):
         
@@ -73,10 +85,10 @@ class FeedForwardNeuralNetwork:
                 outputValue = Layer.Layer.activation(self.hnodes[i - 1], inputValue)
                 FeedForwardNeuralNetwork.valueLayers.append(outputValue)
         
+        cost = self.compute_cost(FeedForwardNeuralNetwork.valueLayers[-1], targets)
+
         # Вычисление ошибки
         FeedForwardNeuralNetwork.valueErrors.append(FeedForwardNeuralNetwork.valueLayers[-1] - targets)
-        
-        # print(np.sum(np.square(FeedForwardNeuralNetwork.valueErrors[-1])))
 
         if len(self.hnodes) > 0:
             for i in range(len(self.hnodes), 0, -1):
@@ -94,12 +106,17 @@ class FeedForwardNeuralNetwork:
         if self.optFunc == 'SGD':
             FeedForwardNeuralNetwork.weights = Optimizers.SGD(self.lr, FeedForwardNeuralNetwork.weights, FeedForwardNeuralNetwork.valueErrors, FeedForwardNeuralNetwork.valueLayers, len(self.hnodes), inputs)
         elif self.optFunc == 'Momentum':   
-            FeedForwardNeuralNetwork.weights = Optimizers.Momentum(self.lr, FeedForwardNeuralNetwork.weights, FeedForwardNeuralNetwork.valueErrors, FeedForwardNeuralNetwork.valueLayers, len(self.hnodes), inputs, self.v)
+            temp = Optimizers.Momentum(self.lr, FeedForwardNeuralNetwork.weights, FeedForwardNeuralNetwork.valueErrors, FeedForwardNeuralNetwork.valueLayers, len(self.hnodes), inputs, self.v)
+            FeedForwardNeuralNetwork.weights = temp[0]
+            self.v = temp[1]
         elif self.optFunc == 'RMSprop':
-            FeedForwardNeuralNetwork.weights = Optimizers.RMSprop(self.lr, FeedForwardNeuralNetwork.weights, FeedForwardNeuralNetwork.valueErrors, FeedForwardNeuralNetwork.valueLayers, len(self.hnodes), inputs, self.s)
-
+            temp = Optimizers.RMSprop(self.lr, FeedForwardNeuralNetwork.weights, FeedForwardNeuralNetwork.valueErrors, FeedForwardNeuralNetwork.valueLayers, len(self.hnodes), inputs, self.s)
+            FeedForwardNeuralNetwork.weights = temp[0]
+            self.s = temp[1]
         FeedForwardNeuralNetwork.valueLayers.clear()
         FeedForwardNeuralNetwork.valueErrors.clear()
+        
+        return cost
 
     def query(self, inputs_list):
         inputs = np.array(inputs_list, ndmin=2).T
@@ -116,3 +133,5 @@ class FeedForwardNeuralNetwork:
         finalOutput = FeedForwardNeuralNetwork.valueLayers[-1]
         FeedForwardNeuralNetwork.valueLayers.clear()
         return finalOutput
+    
+    
