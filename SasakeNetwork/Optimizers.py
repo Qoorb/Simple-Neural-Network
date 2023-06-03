@@ -20,8 +20,7 @@ def SGD(learning_rate, weights, valueErrors, valueLayers, iterations, inputs):
     weights[0] -= learning_rate * np.dot((valueErrors[-1] * valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs))
 
     return weights
-# Results: 93,39% 
-
+# Results: performance = 47.65 % - 1 epoch/learning rate: 0.001
 
 #SGD with Momentum
 def Momentum(learning_rate, weights, valueErrors, valueLayers, iterations, inputs, v):
@@ -35,8 +34,8 @@ def Momentum(learning_rate, weights, valueErrors, valueLayers, iterations, input
     weights[0] -= learning_rate * v[0]
 
     return weights, v
+# Results: performance = 53.94 % - 1 epoch/learning rate: 0.001
 
-# не работает // ???
 def RMSprop(learning_rate, weights, valueErrors, valueLayers, iterations, inputs, s):
     beta = 0.9
     eps = pow(10, -4)
@@ -49,10 +48,27 @@ def RMSprop(learning_rate, weights, valueErrors, valueLayers, iterations, inputs
     weights[0] -= learning_rate * (np.dot((valueErrors[-1] *  valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs)) / (np.sqrt(s[0] + eps)))
 
     return weights, s
-
-# TODO 
-# Тайминги: около 10 минут
-# Оценка: ~10%
+# Results: performance = 92.0 % - 1 epoch/learning rate: 0.001
 
 
-    
+
+
+
+
+
+# def Adam(learning_rate, weights, valueErrors, valueLayers, iterations, inputs, s, v, t=i):
+#     beta1 = 0.9
+#     beta2 = 0.999
+#     eps = pow(10, -8)
+
+#     if len(weights) > 1:
+#         for i in range(iterations, 0, -1):
+#             v[i] = (beta1 * v[i]) + ((1 - beta1) * np.dot((valueErrors[-(i+1)] *  valueLayers[i] * (1.0 - valueLayers[i])), np.transpose(valueLayers[i - 1])))
+#             s[i] = (beta2 * s[i]) + ((1 - beta2) * np.square(np.dot((valueErrors[-(i+1)] * valueLayers[i] * (1.0 - valueLayers[i])), np.transpose(valueLayers[i - 1]))))
+#             v_corrected = v / (1 - np.power(beta1, t))
+
+#             weights[i] -= learning_rate * (np.dot((valueErrors[-(i+1)] *  valueLayers[i] * (1.0 - valueLayers[i])), np.transpose(valueLayers[i - 1])) / (np.sqrt(s[i] + eps)))
+#     s[0] = (beta * s[0]) + ((1 - beta) * np.square(np.dot((valueErrors[-1] * valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs))))
+#     weights[0] -= learning_rate * (np.dot((valueErrors[-1] *  valueLayers[0] * (1.0 - valueLayers[0])), np.transpose(inputs)) / (np.sqrt(s[0] + eps)))
+
+#     return weights, s

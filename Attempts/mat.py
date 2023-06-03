@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 # import numpy as np
 # # import random 
 # # class Neuron():
@@ -106,7 +107,17 @@
 
 # print(5 * 2 / 1 + 5)
 
-def func(a, b):
-    return a + 1, b - 1 
+# def func(a, b):
+#     return a + 1, b - 1 
 
-print(func(2, 4))
+iters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] # iters = [0, 1]; costs = [x_1, x_2]
+costs = [0.3250892302595644, 0.2785481519570171, 0.23168870482597367, 0.19976521897630053, 0.17977220577938618, 0.1666291594013511, 0.1561594914115699, 0.14718032210562051, 0.13970942586988716, 0.1337575804397933]
+plt.plot(iters, costs, color="blue", label="SGD")
+
+plt.xlabel('epochs')
+plt.ylabel('func_cost')
+plt.legend()
+plt.title('visualization of different optimizers')
+# plt.imshow()
+# plt.savefig()
+plt.show()
